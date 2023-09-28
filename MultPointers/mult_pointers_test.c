@@ -3,13 +3,14 @@
 *******************************************************************************/
 
 #include "mult_pointers.h"
-#include <malloc.h>
+// #include <malloc.h>
 # include <stdio.h>
+#include <stdlib.h>
 
 
 int main(int argc, char **argv)
 {
-   int n_rows_cols = 2000;
+   int n_rows_cols = 5;
    int** A = (int**)malloc(n_rows_cols*sizeof(int*));
    int** B = (int**)malloc(n_rows_cols*sizeof(int*));
    for (int i =0; i< n_rows_cols; i++){
@@ -18,8 +19,8 @@ int main(int argc, char **argv)
    }
    for(int i = 0; i <  n_rows_cols; i++) {
       for(int j = 0; j <  n_rows_cols; j++) {
-            A[i][j] = 2;
-            B[i][j] = 2;
+            A[i][j] = rand()% 100;
+            B[i][j] = rand()% 100;
       }
    }
 
