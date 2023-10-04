@@ -6,25 +6,33 @@
 // #include <malloc.h>
 # include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 int main(int argc, char **argv)
 {
-   int n_rows_cols = 5;
+   /* Intializes random number generator */
+   time_t t;
+   srand((unsigned) time(&t));
+
+
+   int n_rows_cols = 200;
    int** A = (int**)malloc(n_rows_cols*sizeof(int*));
    int** B = (int**)malloc(n_rows_cols*sizeof(int*));
+   int** C = (int**)malloc(n_rows_cols*sizeof(int*));
    for (int i =0; i< n_rows_cols; i++){
        A[i] = (int*)malloc(n_rows_cols*sizeof(int));
        B[i] = (int*)malloc(n_rows_cols*sizeof(int));
+       C[i] = (int*)malloc(n_rows_cols*sizeof(int));
    }
    for(int i = 0; i <  n_rows_cols; i++) {
       for(int j = 0; j <  n_rows_cols; j++) {
-            A[i][j] = rand()% 100;
-            B[i][j] = rand()% 100;
+            A[i][j] = rand()% 5;
+            B[i][j] = rand()% 5;
       }
    }
 
-   int** C = mult( A,  B, n_rows_cols);
+   mult( A,  B, C, n_rows_cols);
 
       for(int i = 0; i <  n_rows_cols; i++) {
       for(int j = 0; j <  n_rows_cols; j++) {

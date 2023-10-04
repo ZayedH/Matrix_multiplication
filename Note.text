@@ -1,0 +1,2 @@
+gcc  -c  mult_pointers.c
+gcc -o mult_pointers_test  mult_pointers_test.c mult_pointers.o

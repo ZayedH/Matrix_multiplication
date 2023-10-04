@@ -2,4 +2,5 @@
 
 *******************************************************************************/
 
-void mult( int** , int** , int** , int );
+void mult( int* , int* , int* , int);
+void print_matrix(int* , int);
