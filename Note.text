@@ -1,2 +1,6 @@
 gcc  -c  mult_pointers.c
 gcc -o mult_pointers_test  mult_pointers_test.c mult_pointers.o
+
+
+ mpicc -o main  main.c  mult_matrix.o
+ mpirun -n 4 ./main

@@ -11,28 +11,26 @@
 
 int main(int argc, char **argv)
 {
-   /* Intializes random number generator */
+   clock_t begin = clock();
    time_t t;
-   srand((unsigned) time(&t));
+   /* Intializes random number generator */
+   // srand((unsigned) time(&t));
+   srand(0);
 
-   int n_rows_cols = 5;
+   int n_rows_cols = 9;
    int n_size = n_rows_cols*n_rows_cols;
    int* A = malloc(n_size*sizeof(int));
    int* B = malloc(n_size*sizeof(int));
    int* C = malloc(n_size*sizeof(int));
    for(int i = 0; i <  n_rows_cols; i++) {
       for(int j = 0; j <  n_rows_cols; j++) {
-            *(A+i*n_rows_cols + j)=  0;
+            *(A+i*n_rows_cols + j)=  rand()% 5;
             *(B+i*n_rows_cols + j) = rand()% 5;
       }
    }
 
-
-   printf("%d\n", &A[0]);
-   printf("%d\n",&A[1]);
-    printf("%d\n",&A[2]);
-
    mult( A,  B, C, n_rows_cols);
+   clock_t end = clock();
 
             printf("A:\n");
             print_matrix(A, n_rows_cols);
@@ -40,6 +38,10 @@ int main(int argc, char **argv)
             print_matrix(B, n_rows_cols);
             printf("Product Matrix:\n");
             print_matrix(C, n_rows_cols);
+
+                    // Determine and print the total run time
+        double runTime = (double)(end - begin) / CLOCKS_PER_SEC;
+        printf("Runtime: %f seconds\n", runTime);
    }
 
 
