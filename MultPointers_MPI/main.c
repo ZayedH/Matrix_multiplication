@@ -10,7 +10,7 @@
 MPI_Status status;
 
 // Print matrix function declaration
-// void printMatrix(int (*)[n_rows_cols]);
+void printMatrix(int*);
 
 
 int* A;
@@ -32,6 +32,9 @@ int main(int argc, char **argv)
     int rows; // The number of rows for a worker processor to process
 
     int matrix_subset;  // The subset of a matrix to be processed by workers
+    A = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
+    B = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
+    C = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
 
     MPI_Init(&argc, &argv);  /* initialisation of MPI Library */
         
@@ -44,10 +47,13 @@ int main(int argc, char **argv)
     /* ---------- Manager Processor Code ---------- */
     if (processor_rank == 0)
     {
-        A = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
-        B = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
-        C = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
         printf("\nMultiplying a %dx%d matrix using %d processor(s).\n\n", n_rows_cols, n_rows_cols, number_of_processors);
+           for(int i = 0; i <  n_rows_cols; i++) {
+      for(int j = 0; j <  n_rows_cols; j++) {
+            *(A+i*n_rows_cols + j)=  1;
+            *(B+i*n_rows_cols + j) = 1;
+      }
+   }
         /* Send the matrix to the worker processes */
         rows = n_rows_cols / number_of_workers;
         matrix_subset = 0;
@@ -60,10 +66,10 @@ int main(int argc, char **argv)
             MPI_Send(&rows, 1, MPI_INT, destination_processor, 1, MPI_COMM_WORLD);
 
             // Send rows from matrix 1 to destination worker processor
-            MPI_Send(&A, rows * n_rows_cols, MPI_INT, destination_processor, 1, MPI_COMM_WORLD);
+            MPI_Send(&A[matrix_subset], rows * n_rows_cols, MPI_INT, destination_processor, 1, MPI_COMM_WORLD);
 
             // Send entire matrix 2 to destination worker processor
-            MPI_Send(&B, n_rows_cols * n_rows_cols, MPI_INT, destination_processor, 1, MPI_COMM_WORLD);
+            MPI_Send(&B[0], n_rows_cols * n_rows_cols, MPI_INT, destination_processor, 1, MPI_COMM_WORLD);
 
             // Determine the next chunk of data to send to the next processor
             matrix_subset = matrix_subset + rows;
@@ -74,19 +80,18 @@ int main(int argc, char **argv)
             source_processor = i;
             MPI_Recv(&matrix_subset, 1, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
             MPI_Recv(&rows, 1, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
-            MPI_Recv(&C, rows * n_rows_cols, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
+            MPI_Recv(&C[matrix_subset], rows * n_rows_cols, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
         }
 
-        // print  matrix results
-        // if (false)
-        // {
-        //     printf("Matrix 1 A:\n");
-        //     printMatrix(A);
-        //     printf("Matrix 2 B:\n");
-        //     printMatrix(B);
-        //     printf("Product Matrix C = AB:\n");
-        //     printMatrix(C);
-        // }
+        if (true)
+        {
+            printf("Matrix 1 A:\n");
+            printMatrix(A);
+            printf("Matrix 2 B:\n");
+            printMatrix(B);
+            printf("Product Matrix C = AB:\n");
+            printMatrix(C);
+        }
 
 
     }
@@ -94,56 +99,48 @@ int main(int argc, char **argv)
     /* ---------- Worker Processor Code ---------- */
     else
     {
-        // A = (int**)malloc(n_rows_cols*sizeof(int*));
-        // B = (int**)malloc(n_rows_cols*sizeof(int*));
-        // C = (int**)malloc(n_rows_cols*sizeof(int*));
-        // for (int i =0; i< n_rows_cols; i++){
-        //     A[i] = (int*)malloc(n_rows_cols*sizeof(int));
-        //     B[i] = (int*)malloc(n_rows_cols*sizeof(int));
-        //     C[i] = (int*)malloc(n_rows_cols*sizeof(int));
-        // }
         source_processor = 0;
         MPI_Recv(&matrix_subset, 1, MPI_INT, source_processor, 1, MPI_COMM_WORLD, &status);
         MPI_Recv(&rows, 1, MPI_INT, source_processor, 1, MPI_COMM_WORLD, &status);
-        MPI_Recv(&A, rows * n_rows_cols, MPI_INT, source_processor, 1, MPI_COMM_WORLD, &status);
-        MPI_Recv(&B, n_rows_cols * n_rows_cols, MPI_INT, source_processor, 1, MPI_COMM_WORLD, &status);
+        MPI_Recv(&A[0], rows * n_rows_cols, MPI_INT, source_processor, 1, MPI_COMM_WORLD, &status);
+        MPI_Recv(&B[0], n_rows_cols * n_rows_cols, MPI_INT, source_processor, 1, MPI_COMM_WORLD, &status);
 
         /* Perform matrix multiplication */
-        // for (int i = 0; i < rows ; i++)
-        // {
-        //     for (int j = 0; j < n_rows_cols; j++)
-        //     {
-        //         C[i][j] = 0;
-        //         for (int k = 0; k < n_rows_cols; k++)
-        //         {
-        //             C[i][j] = C[i][j] + A[i][k] * B[k][j];
-        //         }
-        //     }
-        // }
+         for (int i = 0; i < rows ; i++)
+         {
+         for (int j = 0; j < n_rows_cols; j++)
+             {
+                *(C+i*n_rows_cols+j) = 0;
+             for (int k = 0; k < n_rows_cols; k++)
+              {
+                  *(C+i*n_rows_cols+j) +=  *(A+i*n_rows_cols+j) * *(B+j*n_rows_cols+k);
+                }
+            }
+         }
 
         MPI_Send(&matrix_subset, 1, MPI_INT, 0, 2, MPI_COMM_WORLD);
         MPI_Send(&rows, 1, MPI_INT, 0, 2, MPI_COMM_WORLD);
-        MPI_Send(&C, rows * n_rows_cols, MPI_INT, 0, 2, MPI_COMM_WORLD);
+        MPI_Send(&C[0], rows * n_rows_cols, MPI_INT, 0, 2, MPI_COMM_WORLD);
     }
     MPI_Finalize();
 
 
 }
 
-// /**
-//  * @brief Prints the contents of an NxN matrix
-//  * 
-//  * @param matrix An NxN matrix of integers
-//  */
-// void printMatrix(int (*matrix)[n_rows_cols])
-// {
-//     for ( int i = 0; i < n_rows_cols; i++)
-//     {
-//         for (int j = 0; j < n_rows_cols; j++)
-//         {
-//             printf("%d\t", matrix[i][j]);
-//         }
-//         printf("\n");
-//     }
-//     printf("\n");
-// }
+/**
+ * @brief Prints the contents of an NxN matrix
+ * 
+ * @param matrix An NxN matrix of integers
+ */
+void printMatrix(int* matrix)
+{
+    for (int i = 0; i < n_rows_cols; i++)
+    {
+        for (int j = 0; j < n_rows_cols; j++)
+        {
+            printf("%d\t", *(matrix+i*n_rows_cols + j));
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
