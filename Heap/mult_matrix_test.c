@@ -22,10 +22,15 @@ int main(int argc, char **argv)
    int* C = malloc(n_size*sizeof(int));
    for(int i = 0; i <  n_rows_cols; i++) {
       for(int j = 0; j <  n_rows_cols; j++) {
-            *(A+i*n_rows_cols + j)= rand()% 5;
+            *(A+i*n_rows_cols + j)=  0;
             *(B+i*n_rows_cols + j) = rand()% 5;
       }
    }
+
+
+   printf("%d\n", &A[0]);
+   printf("%d\n",&A[1]);
+    printf("%d\n",&A[2]);
 
    mult( A,  B, C, n_rows_cols);
 
