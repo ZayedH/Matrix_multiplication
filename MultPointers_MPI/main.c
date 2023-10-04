@@ -56,6 +56,7 @@ int main(int argc, char **argv)
    }
         /* Send the matrix to the worker processes */
         rows = n_rows_cols / number_of_workers;
+        // printf("%d", rows);
         matrix_subset = 0;
         for (destination_processor = 1; destination_processor <= number_of_workers; destination_processor++)
         {
@@ -72,7 +73,7 @@ int main(int argc, char **argv)
             MPI_Send(&B[0], n_rows_cols * n_rows_cols, MPI_INT, destination_processor, 1, MPI_COMM_WORLD);
 
             // Determine the next chunk of data to send to the next processor
-            matrix_subset = matrix_subset + rows;
+            matrix_subset = matrix_subset + n_rows_cols*rows;
         }
         // Retrieve results from all workers processors
         for (int i = 1; i <= number_of_workers; i++)
@@ -81,6 +82,7 @@ int main(int argc, char **argv)
             MPI_Recv(&matrix_subset, 1, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
             MPI_Recv(&rows, 1, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
             MPI_Recv(&C[matrix_subset], rows * n_rows_cols, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
+            // printf("%d",matrix_subset );
         }
 
         if (true)
@@ -117,7 +119,8 @@ int main(int argc, char **argv)
                 }
             }
          }
-
+        // printf(" processeur rank %d\n", processor_rank);
+        // printMatrix(C);
         MPI_Send(&matrix_subset, 1, MPI_INT, 0, 2, MPI_COMM_WORLD);
         MPI_Send(&rows, 1, MPI_INT, 0, 2, MPI_COMM_WORLD);
         MPI_Send(&C[0], rows * n_rows_cols, MPI_INT, 0, 2, MPI_COMM_WORLD);
