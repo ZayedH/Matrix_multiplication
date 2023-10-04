@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     if (processor_rank == 0)
     {
         printf("\nMultiplying a %dx%d matrix using %d processor(s).\n\n", n_rows_cols, n_rows_cols, number_of_processors);
-           for(int i = 0; i <  n_rows_cols; i++) {
+    for(int i = 0; i <  n_rows_cols; i++) {
       for(int j = 0; j <  n_rows_cols; j++) {
             *(A+i*n_rows_cols + j)=  1;
             *(B+i*n_rows_cols + j) = 1;
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
                 *(C+i*n_rows_cols+j) = 0;
              for (int k = 0; k < n_rows_cols; k++)
               {
-                  *(C+i*n_rows_cols+j) +=  *(A+i*n_rows_cols+j) * *(B+j*n_rows_cols+k);
+                  *(C+i*n_rows_cols+j) +=  *(A+i*n_rows_cols+k) * *(B+k*n_rows_cols+j);
                 }
             }
          }
