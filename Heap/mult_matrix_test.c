@@ -17,7 +17,7 @@ int main(int argc, char **argv)
    // srand((unsigned) time(&t));
    srand(0);
 
-   int n_rows_cols = 9;
+   int n_rows_cols = 1458;
    int n_size = n_rows_cols*n_rows_cols;
    int* A = malloc(n_size*sizeof(int));
    int* B = malloc(n_size*sizeof(int));

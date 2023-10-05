@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv)
 {
-    int n_rows_cols= 9;  // asume having only the suqured matrix
+    int n_rows_cols= 1458;  // asume having only the suqured matrix
 
     int number_of_processors; // number of processors
     int processor_rank;
