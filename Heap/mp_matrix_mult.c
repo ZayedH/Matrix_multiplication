@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    clock_t begin = clock();
+    double begin = omp_get_wtime();
     time_t t;
         // srand((unsigned) time(&t));
     srand(0);
@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     int* B;
     int* C;
     int i, j, k;
-    int n_rows_cols = 1458;
+    int n_rows_cols = 1024;
     A = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
     B = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
     C = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
@@ -26,38 +26,13 @@ int main(int argc, char **argv)
                 *(B+i*n_rows_cols + j) = rand()% 5;
       }
    }
-    #pragma omp parallel for private(i,j,k)
+    #pragma omp parallel
     
-        // int number_of_threads = omp_get_num_threads();
-        // int rows = n_rows_cols/number_of_threads;
-        // int rank_of_thread = omp_get_thread_num();
-        // if ( rank_of_thread != number_of_threads-1){
-
-        // for (int i = rows*rank_of_thread; i < n_rows_cols ; i++)
-        //  {
-        //  for (int j = 0; j < n_rows_cols; j++)
-        //      {
-        //         *(C+i*n_rows_cols+j) = 0;
-        //      for (int k = 0; k < n_rows_cols; k++)
-        //       {
-        //           *(C+i*n_rows_cols+j) +=  *(A+i*n_rows_cols+k) * *(B+k*n_rows_cols+j);
-        //         }
-        //     }
-        //  }
-
-        // }else{
-        // for (int i = rows*rank_of_thread; i < (rank_of_thread+1)*rows ; i++)
-        //  {
-        //  for (int j = 0; j < n_rows_cols; j++)
-        //      {
-        //         *(C+i*n_rows_cols+j) = 0;
-        //      for (int k = 0; k < n_rows_cols; k++)
-        //       {
-        //           *(C+i*n_rows_cols+j) +=  *(A+i*n_rows_cols+k) * *(B+k*n_rows_cols+j);
-        //         }
-        //     }
-        //  }
-        // }
+        #pragma omp single
+        {
+            printf("\nMultiplying two %dx%d matrices using %d thread(s).\n\n", n_rows_cols, n_rows_cols, omp_get_num_threads());
+        }
+        #pragma omp parallel for private(i,j,k)
         for(i = 0; i <  n_rows_cols; i++) {
             for(j = 0; j <  n_rows_cols; j++) {
          *(C+i*n_rows_cols + j)= 0;
@@ -65,9 +40,9 @@ int main(int argc, char **argv)
              *(C+i*n_rows_cols + j)+= *(A+i*n_rows_cols+k) * *(B+k*n_rows_cols+j);
          }
       } 
-        
-    }
-    clock_t end = clock();
+        }
+
+    double end = omp_get_wtime();
     printf("Matrix A:\n");
     print_matrix(A, n_rows_cols);
     printf("Matrix B:\n");
@@ -75,7 +50,7 @@ int main(int argc, char **argv)
     printf("Product Matrix C = AB:\n");
     print_matrix(C, n_rows_cols);
     // Determine and print the total run time
-    double runTime = (double)(end - begin) / CLOCKS_PER_SEC;
+    double runTime = (end - begin);
     printf("Runtime: %f seconds\n", runTime);
 
  

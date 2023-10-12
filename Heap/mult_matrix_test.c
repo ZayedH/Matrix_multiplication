@@ -16,8 +16,8 @@ int main(int argc, char **argv)
    /* Intializes random number generator */
    // srand((unsigned) time(&t));
    srand(0);
-
-   int n_rows_cols = 1458;
+   int n_rows_cols = 1024;
+   printf("\nMultiplying two %dx%d matrices. \n\n ", n_rows_cols, n_rows_cols);
    int n_size = n_rows_cols*n_rows_cols;
    int* A = malloc(n_size*sizeof(int));
    int* B = malloc(n_size*sizeof(int));

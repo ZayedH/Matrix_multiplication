@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv)
 {
-    int n_rows_cols= 1458;  // asume having only the suqured matrix
+    int n_rows_cols= 1024;  // asume having only the suqured matrix
 
     int number_of_processors; // number of processors
     int processor_rank;
@@ -39,11 +39,11 @@ int main(int argc, char **argv)
     /* ---------- Manager Processor Code ---------- */
     if (processor_rank == 0)
     {
-        clock_t begin = clock();
+        double begin = MPI_Wtime();
         time_t t;
         // srand((unsigned) time(&t));
         srand(0);
-        printf("\nMultiplying a %dx%d matrix using %d processor(s).\n\n", n_rows_cols, n_rows_cols, number_of_processors);
+        printf("\nMultiplying two %dx%d matrices using %d processor(s).\n\n", n_rows_cols, n_rows_cols, number_of_processors);
             A = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
             B = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
             C = malloc(sizeof(int) * n_rows_cols*n_rows_cols);
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
             MPI_Recv(&C[matrix_subset], rows * n_rows_cols, MPI_INT, source_processor, 2, MPI_COMM_WORLD, &status);
             // printf("%d",matrix_subset );
         }
-        clock_t end = clock();
+        double end = MPI_Wtime();;
 
         if (true)
         {
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
             print_matrix(C, n_rows_cols);
         }
         // Determine and print the total run time
-        double runTime = (double)(end - begin) / CLOCKS_PER_SEC;
+        double runTime = (end - begin);
         printf("Runtime: %f seconds\n", runTime);
 
 
