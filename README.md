@@ -1,62 +1,31 @@
-# Project Title
+# multiplication of the paralization matrix
 
-Simple overview of use/purpose.
+In the 'c_code' folder, you will find various methods for computing matrix multiplication, including cache-friendly code, OpenMP, and OpenMPI, all aimed at optimizing execution time.
 
-## Description
+## mult_matrix.c
 
-An in-depth paragraph about your project and overview of use.
+Contains both cache-friendly and cache-unfriendly code.
 
 ## Getting Started
 
-### Dependencies
+### mult_matrix_test.c
+For testing purposes only, without any parallelization.
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+### mpi_matrix_mult.c
 
-### Installing
+Contains parallelization using OpenMPI.
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
-
-### Executing program
-
-* How to run the program
-* Step-by-step bullets
 ```
-code blocks for commands
+mpicc -o mpi_matrix_mult  mpi_matrix_mult.c  mult_matrix.o
+mpirun -np 4 ./mpi_matrix_mult 
 ```
 
-## Help
+### mp_matrix_mult.C
+Contains parallelization using OpenMP.
 
-Any advise for common problems or issues.
 ```
-command to run if program contains helper info
+ gcc -o  mp_matrix_mult -fopenmp mp_matrix_mult.c mult_matrix.o
 ```
 
-## Authors
-
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
-
-## Version History
-
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
-
-## License
-
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
-
-## Acknowledgments
-
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
+## Others
+There are some text files for collecting data to be plotted for comparison by plots.py.
