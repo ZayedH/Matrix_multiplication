@@ -8,7 +8,6 @@ void mult( int* A, int* B, int* C, int n_rows_cols){
 
    for(int i = 0; i <  n_rows_cols; i++) {
       for(int j = 0; j <  n_rows_cols; j++) {
-         *(C+i*n_rows_cols + j)= 0;
          for(int k = 0; k < n_rows_cols; k++) {
              *(C+i*n_rows_cols + j)+= *(A+i*n_rows_cols+k) * *(B+k*n_rows_cols+j);
          }
@@ -16,6 +15,18 @@ void mult( int* A, int* B, int* C, int n_rows_cols){
    }
 
 }
+void mult_cache_friendly( int* A, int* B, int* C, int n_rows_cols){
+
+   for(int i = 0; i <  n_rows_cols; i++) {
+      for(int k = 0; k <  n_rows_cols; k++) {
+         for(int j = 0; j < n_rows_cols; j++) {
+             *(C+i*n_rows_cols + j)+= *(A+i*n_rows_cols+k) * *(B+k*n_rows_cols+j);
+         }
+      }
+   }
+
+}
+
 void print_matrix(int* matrix, int n_rows_cols)
 {
     for (int i = 0; i < n_rows_cols; i++)
@@ -28,4 +39,7 @@ void print_matrix(int* matrix, int n_rows_cols)
     }
     printf("\n");
 }
+
+
+
 

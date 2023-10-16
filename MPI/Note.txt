@@ -1,2 +1,0 @@
-mpicc -o many  many_tasks.C 
-mpirun -n 4 ./many
