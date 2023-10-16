@@ -22,7 +22,7 @@ int main(int argc, char **argv)
    time_t t;
    // srand((unsigned) time(&t));
    srand(0);
-   fptr = fopen("gcc_mult_o1_cache.txt","w");
+   fptr = fopen("gcc_mult_cache.txt","w");
    for(int p = 3; p<=12; p++){
 
       begin = clock();
