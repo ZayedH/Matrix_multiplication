@@ -1,4 +1,4 @@
-# multiplication of the paralization matrix
+# paralization of matrix multiplication
 
 In the 'c_code' folder, you will find various methods for computing matrix multiplication, including cache-friendly code, OpenMP, and OpenMPI, all aimed at optimizing execution time.
 
